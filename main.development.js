@@ -169,7 +169,8 @@ app.on('ready', () => {
 
     menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
-  } else {
+  }
+  else {
     template = [{
       label: '&File',
       submenu: [{

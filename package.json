@@ -92,6 +92,7 @@
     "webpack-hot-middleware": "^2.10.0"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
     "commonmark": "^0.25.1",
     "css-modules-require-hook": "^4.0.0",
     "draft-js": "^0.7.0",
