@@ -12,8 +12,6 @@ const Decorator = () => ({
 
     const highlight = Prism.tokenize(text, Prism.languages.markdown);
 
-    console.log(highlight);
-
     let offset = 0;
     highlight.forEach(token => {
       if (typeof token === 'string') {
