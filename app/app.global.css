@@ -1,0 +1,16 @@
+html, body {
+  position: relative;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.matched {
+  color: red;
+}
+.bold {
+  font-weight: bold;
+}
+.italic {
+  font-style: italic;
+}
