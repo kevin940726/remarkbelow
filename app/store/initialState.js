@@ -6,40 +6,7 @@ import styles from '../utils/prism.css';
 import classNames from 'classnames';
 import regex from '../utils/regex';
 
-const Decorator = () => ({
-  getDecorations: (block) => {
-    const text = block.getText();
-    let decorations = List(Repeat(null, text.length));
-
-    const highlight = Prism.tokenize(text, Prism.languages.markdown);
-
-    let offset = 0;
-    highlight.forEach(token => {
-      if (typeof token === 'string') {
-        offset += token.length;
-      }
-      else {
-        const len = token.matchedStr.length;
-        if (decorations.slice(offset, offset + len).every(d => d === null)) {
-          Range(offset, offset + len).toArray().forEach(i => {
-            decorations = decorations.set(i, `${token.type}.${token.alias}`);
-          });
-        }
-
-        offset += len;
-      }
-    });
-
-    return decorations;
-  },
-
-  getComponentForKey: () => props => (
-    <span className={classNames(styles.token, ...props.type.map(type => styles[type]))}>
-      {props.children}
-    </span>
-  ),
-  getPropsForKey: key => ({ type: key.split('.') }),
-});
+var _ = require('lodash')
 
 const defaultContent = ContentState.createFromText(
 `# Heading
@@ -65,17 +32,41 @@ Bullet list:
   * apples
   * oranges
   * pears
+    * apples
+    * oranges
+    * pears
 
 Numbered list:
 
   1. apples
+    1. apples
+    2. oranges
+    3. pears
   2. oranges
   3. pears
 
+| Tables        | Are           | Cool  |
+|---------------|:-------------:|-------|
+| col 3 is      |    r-l        | $1600 |
+| col 2 is      | centered      |   $12 |
+| zebra stripes | are neat      |    $1 |
+
+> ar en resnksndf sdpofmopsdmf
+sdlknksdnkf
+> wofnosidn oi
+> oejfosf
+
+> ijewnef
+> kneinfie
+
+reist
+
+> sfosdnf
+>wnfoefm
+
+
 A [link](http://example.com).`
 );
-
-const decorator = Decorator();
 
 const findWithRegex = (reg, contentBlock, callback) => {
   const text = contentBlock.getText();
@@ -84,6 +75,26 @@ const findWithRegex = (reg, contentBlock, callback) => {
   while ((matchArr = reg.exec(text)) !== null) {
     start = matchArr.index;
     callback(start, start + matchArr[0].length);
+  }
+};
+const findWithTableRegex = (reg, contentBlock, callback) => {
+  const text = contentBlock.getText();
+  let matchArr;
+  let start;
+  while ((matchArr = reg.exec(text)) !== null) {
+    start = matchArr.index;
+    matchArr = matchArr[0].split('|')
+    matchArr= _.compact(matchArr)
+    let offset = 0;
+    matchArr.forEach((match)=>{
+      if(text[offset]==='|'){
+        offset+=1
+      }
+      let end = offset + match.length 
+      end = end < 0 ? 0: end 
+      callback(offset, end);
+      offset = end
+    })
   }
 };
 
@@ -114,6 +125,24 @@ const inlineDecorator = [
   },
   {
     strategy: (contentBlock, callback) =>
+      findWithRegex(regex.inline.blockquote, contentBlock, callback),
+    component: InlineComponent,
+    props: { type: 'matched' }
+  },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithRegex(regex.inline.list, contentBlock, callback),
+    component: InlineComponent,
+    props: { type: 'matched' }
+  },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithTableRegex(regex.inline.table, contentBlock, callback),
+    component: InlineComponent,
+    props: { type: 'matched'}
+  },
+  {
+    strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.code, contentBlock, callback),
     component: props => (
       <code {...props} className="language-">
@@ -137,20 +166,20 @@ const inlineDecorator = [
   },
 ];
 
-// const blockDecorator = [
-//   {
-//     strategy: (contentBlock, callback) =>
-//       findWithRegex(regex.block.heading, contentBlock, callback),
-//     component: props => React.createElement(
-//       `h${props.level}`,
-//       { ...props },
-//       props.children
-//     ),
-//     props: {
-//       type: 'code'
-//     }
-//   }
-// ];
+const blockDecorator = [
+  {
+    strategy: (contentBlock, callback) =>
+      findWithRegex(regex.block.heading, contentBlock, callback),
+    component: props => React.createElement(
+      `h${props.level}`,
+      { ...props },
+      props.children
+    ),
+    props: {
+      type: 'code'
+    }
+  }
+];
 
 const regexDecorator = new CompositeDecorator([
   ...inlineDecorator,
