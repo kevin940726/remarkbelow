@@ -1,12 +1,9 @@
 import React from 'react';
 import { EditorState, ContentState, CompositeDecorator } from 'draft-js';
-import { List, Repeat, Range } from 'immutable';
-const Prism = require('../utils/prism.js');
+// import { List, Repeat, Range } from 'immutable';
 import styles from '../utils/prism.css';
 import classNames from 'classnames';
 import regex from '../utils/regex';
-
-var _ = require('lodash')
 
 const defaultContent = ContentState.createFromText(
 `# Heading
@@ -77,24 +74,23 @@ const findWithRegex = (reg, contentBlock, callback) => {
     callback(start, start + matchArr[0].length);
   }
 };
+
 const findWithTableRegex = (reg, contentBlock, callback) => {
   const text = contentBlock.getText();
   let matchArr;
-  let start;
   while ((matchArr = reg.exec(text)) !== null) {
-    start = matchArr.index;
-    matchArr = matchArr[0].split('|')
-    matchArr= _.compact(matchArr)
+    matchArr = matchArr[0].split('|');
+    matchArr = matchArr.filter(x => x);
     let offset = 0;
-    matchArr.forEach((match)=>{
-      if(text[offset]==='|'){
-        offset+=1
+    matchArr.forEach((match) => {
+      if (text[offset] === '|') {
+        offset += 1;
       }
-      let end = offset + match.length 
-      end = end < 0 ? 0: end 
+      let end = offset + match.length;
+      end = end < 0 ? 0 : end;
       callback(offset, end);
-      offset = end
-    })
+      offset = end;
+    });
   }
 };
 
@@ -125,24 +121,6 @@ const inlineDecorator = [
   },
   {
     strategy: (contentBlock, callback) =>
-      findWithRegex(regex.inline.blockquote, contentBlock, callback),
-    component: InlineComponent,
-    props: { type: 'matched' }
-  },
-  {
-    strategy: (contentBlock, callback) =>
-      findWithRegex(regex.inline.list, contentBlock, callback),
-    component: InlineComponent,
-    props: { type: 'matched' }
-  },
-  {
-    strategy: (contentBlock, callback) =>
-      findWithTableRegex(regex.inline.table, contentBlock, callback),
-    component: InlineComponent,
-    props: { type: 'matched'}
-  },
-  {
-    strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.code, contentBlock, callback),
     component: props => (
       <code {...props} className="language-">
@@ -167,22 +145,41 @@ const inlineDecorator = [
 ];
 
 const blockDecorator = [
+  // {
+  //   strategy: (contentBlock, callback) =>
+  //     findWithRegex(regex.block.heading, contentBlock, callback),
+  //   component: props => React.createElement(
+  //     `h${props.level}`,
+  //     { ...props },
+  //     props.children
+  //   ),
+  //   props: {
+  //     type: 'heading'
+  //   }
+  // },
   {
     strategy: (contentBlock, callback) =>
-      findWithRegex(regex.block.heading, contentBlock, callback),
-    component: props => React.createElement(
-      `h${props.level}`,
-      { ...props },
-      props.children
-    ),
-    props: {
-      type: 'code'
-    }
-  }
+      findWithRegex(regex.inline.blockquote, contentBlock, callback),
+    component: InlineComponent,
+    props: { type: 'blockquote' }
+  },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithRegex(regex.inline.list, contentBlock, callback),
+    component: InlineComponent,
+    props: { type: 'list' }
+  },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithTableRegex(regex.inline.table, contentBlock, callback),
+    component: InlineComponent,
+    props: { type: 'table' }
+  },
 ];
 
 const regexDecorator = new CompositeDecorator([
   ...inlineDecorator,
+  ...blockDecorator,
 ]);
 
 export default {

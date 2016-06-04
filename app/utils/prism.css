@@ -76,9 +76,6 @@ pre[class*="language-"] {
 .token.punctuation {
 	color: #999;
 }
-.token.matched {
-	color: red;
-}
 .namespace {
 	opacity: .7;
 }
@@ -142,4 +139,10 @@ pre[class*="language-"] {
 
 .token.strike {
 	text-decoration: line-through;
+}
+
+.token.blockquote,
+.token.list,
+.token.table {
+	color: red;
 }
