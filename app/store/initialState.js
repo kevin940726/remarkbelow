@@ -145,18 +145,18 @@ const inlineDecorator = [
 ];
 
 const blockDecorator = [
-  // {
-  //   strategy: (contentBlock, callback) =>
-  //     findWithRegex(regex.block.heading, contentBlock, callback),
-  //   component: props => React.createElement(
-  //     `h${props.level}`,
-  //     { ...props },
-  //     props.children
-  //   ),
-  //   props: {
-  //     type: 'heading'
-  //   }
-  // },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithRegex(regex.block.heading, contentBlock, callback),
+    component: props => {
+      const level = regex.block.heading.exec(props.children[0].props.text);
+      console.log(level);
+      return (
+        <h2>{props.children}</h2>
+      );
+    },
+    props: { type: 'heading' }
+  },
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.blockquote, contentBlock, callback),

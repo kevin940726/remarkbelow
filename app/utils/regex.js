@@ -18,6 +18,11 @@ inline.link = new RegExp(
     .replace('href', inline._href.source)
 , 'g');
 
+const block = {
+  heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
+};
+
 export default {
-  inline
+  inline,
+  block,
 };
