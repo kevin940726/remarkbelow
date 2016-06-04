@@ -125,15 +125,15 @@ const inlineDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.link, contentBlock, callback),
-    component: props => (
-      <a href={props.href} target="_blank">
-        {props.children}
-      </a>
-    ),
-    props: {
-      type: 'link',
-      href: '#'
-    }
+    component: props => {
+      const group = regex.inline.link.exec(props.children[0].props.text);
+      return (
+        <a href={group[2]} target="_blank">
+          {props.children}
+        </a>
+      );
+    },
+    props: { type: 'link' }
   },
 ];
 

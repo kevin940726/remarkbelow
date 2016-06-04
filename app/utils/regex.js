@@ -6,6 +6,7 @@ const inline = {
   link: /!?\[(inside)\]\(href\)/g,
   _inside: /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/g,
   _href: /\s*<?([\s\S]*?)>?(?:\s+['"]([\s\S]*?)['"])?\s*/g,
+  url: /(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g,
 };
 
 inline.link = new RegExp(
