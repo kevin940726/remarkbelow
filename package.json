@@ -112,7 +112,7 @@
     "react-redux": "^4.4.5",
     "react-router": "^2.2.4",
     "react-router-redux": "^4.0.2",
-    "redux": "^3.4.0",
+    "redux": "^3.5.2",
     "redux-actions": "^0.9.1",
     "redux-thunk": "^2.0.1",
     "simple-markdown": "^0.1.0",
