@@ -24,6 +24,8 @@ Horizontal rule:
 
 ---
 
+![alt text](http://path/to/img.jpg "Title")
+
 Bullet list:
 
   * apples
@@ -101,6 +103,18 @@ const InlineComponent = props => (
 );
 
 const inlineDecorator = [
+  {
+    strategy: (contentBlock, callback) =>
+      findWithRegex(regex.inline.hr, contentBlock, callback),
+    component: InlineComponent,
+    props: { type: 'hr' }
+  },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithRegex(regex.inline.img, contentBlock, callback),
+    component: InlineComponent,
+    props: { type: 'img' }
+  },
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.strong, contentBlock, callback),
