@@ -21,10 +21,13 @@ line break.
 Text attributes _italic_, *italic*, __bold__, **bold**, \`monospace\`, ~~strike~~.
 
 Horizontal rule:
-
 ---
 
+img:
 ![alt text](http://path/to/img.jpg "Title")
+
+taskList:
+- [ ] fuck
 
 Bullet list:
 
