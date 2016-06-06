@@ -132,6 +132,12 @@ const inlineDecorator = [
   },
   {
     strategy: (contentBlock, callback) =>
+      findWithRegex(regex.inline.taskList, contentBlock, callback),
+    component: InlineComponent,
+    props: { type: 'taskList' }
+  },
+  {
+    strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.strong, contentBlock, callback),
     component: InlineComponent,
     props: { type: 'bold' }
