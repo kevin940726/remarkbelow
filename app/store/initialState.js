@@ -34,6 +34,12 @@ Bullet list:
     * apples
     * oranges
     * pears
+      * apples
+      * oranges
+      * pears
+        * apples
+        * oranges
+        * pears
 
 Numbered list:
 
@@ -41,6 +47,12 @@ Numbered list:
     1. apples
     2. oranges
     3. pears
+      1. apples
+      2. oranges
+      3. pears
+        1. apples
+        2. oranges
+        3. pears
   2. oranges
   3. pears
 
@@ -183,8 +195,18 @@ const blockDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.list, contentBlock, callback),
-    component: InlineComponent,
-    props: { type: 'list' }
+      component: props => {
+        const text = props.children[0].props.text;
+        var spaces = text.search(/\S/);
+        if( spaces%2!==0 ){
+          spaces+=1
+        }
+        spaces = spaces/2 %4
+        return <span {...props} className={classNames(styles.token, styles[props.type], 'matched-'+spaces)}>
+          {props.children}
+        </span>
+      },
+      props: { type: 'list' }
   },
   {
     strategy: (contentBlock, callback) =>

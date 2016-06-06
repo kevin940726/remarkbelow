@@ -142,7 +142,6 @@ pre[class*="language-"] {
 }
 
 .token.blockquote,
-.token.list,
 .token.table {
 	color: red;
 }
