@@ -106,7 +106,10 @@ const inlineDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.hr, contentBlock, callback),
-    component: InlineComponent,
+    component: props => (
+      <hr className={classNames(styles.token, styles[props.type])}>
+      </hr>
+    ),
     props: { type: 'hr' }
   },
   {
