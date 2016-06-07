@@ -203,35 +203,40 @@ const blockDecorator = [
     },
     props: { type: 'heading' }
   },
-  // {
-  //   strategy: (contentBlock, callback) =>
-  //     findWithBlockRegex(regex.block.blockquote, contentBlock, callback),
-  //   component: props => {
-  //     const group = regex.block.blockquote.exec(props.children[0].props.text);
-  //     regex.block.blockquote.lastIndex = 0;
-  //     return (
-  //       <blockquote {...props}>
-  //         {props.children}
-  //       </blockquote>
-  //     );
-  //   },
-  //   props: { type: 'blockquote' }
-  // },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithBlockRegex(regex.block.blockquote, contentBlock, callback),
+    component: props => (
+      <blockquote {...props}>
+        {props.children}
+      </blockquote>
+    ),
+    props: { type: 'blockquote' }
+  },
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.list, contentBlock, callback),
-      component: props => {
-        const text = props.children[0].props.text;
-        var spaces = text.search(/\S/);
-        if( spaces%2!==0 ){
-          spaces+=1
-        }
-        spaces = spaces/2 %4
-        return <span {...props} className={classNames(styles.token, styles[props.type], 'matched-'+spaces)}>
+    component: props => {
+      const text = props.children[0].props.text;
+      let spaces = text.search(/\S/);
+      if (spaces % 2 !== 0) {
+        spaces += 1;
+      }
+      spaces = spaces / 2 % 4;
+      return (
+        <span
+          {...props}
+          className={classNames(
+            styles.token,
+            styles[props.type],
+            `matched-${spaces}`,
+          )}
+        >
           {props.children}
         </span>
-      },
-      props: { type: 'list' }
+      );
+    },
+    props: { type: 'list' }
   },
   {
     strategy: (contentBlock, callback) =>

@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { block } from './regex';
 
 const blockRenderer = contentBlock => {

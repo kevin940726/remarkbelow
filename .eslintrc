@@ -15,7 +15,8 @@
     "react/prefer-stateless-function": 0,
     "react/prop-types": 0,
     "new-cap": 0,
-    "brace-style": [1, "stroustrup"]
+    "brace-style": [1, "stroustrup"],
+    "no-cond-assign": 0
   },
   "plugins": [
     "import",
