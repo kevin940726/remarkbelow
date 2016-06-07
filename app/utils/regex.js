@@ -4,22 +4,22 @@ const inline = {
   code: /(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/g,
   strike: /~~(?=\S)([\s\S]*?\S)~~/g,
   link: /!?\[(inside)\]\(href\)/g,
-  _inside: /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/g,
-  _href: /\s*<?([\s\S]*?)>?(?:\s+['"]([\s\S]*?)['"])?\s*/g,
+  inside: /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/g,
+  href: /\s*<?([\s\S]*?)>?(?:\s+['"]([\s\S]*?)['"])?\s*/g,
   url: /(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g,
-  blockquote: /^>(?:[\t ]*>)*/g,
-  list: /(^\s*)(?:[*+-]|\d+\.)(?=[\t ].)/mg,
-  table: /[|]?(\s+[A-Za-z0-9 -_*#@$%:;?!`\(\).,\/\\]+\s+)[|]?[|]?(\s+[A-Za-z0-9 -_*#@$%:;?!`\(\).,\/\\]+\s+)[|]?[|]?(\s+[A-Za-z0-9 -_*#@$%:;?!`\(\).,\/\\]+\s+)[|]?\r?\n?/g,
 };
 
 inline.link = new RegExp(
   inline.link.source
-    .replace('inside', inline._inside.source)
-    .replace('href', inline._href.source)
+    .replace('inside', inline.inside.source)
+    .replace('href', inline.href.source)
 , 'g');
 
 const block = {
-  heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
+  heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/g,
+  blockquote: /^(>(?:[\t ]*>)*\s)(.*)/g,
+  list: /(^\s*)(?:[*+-]|\d+\.)(?=[\t ].)/mg,
+  table: /[|]?(\s+[A-Za-z0-9 -_*#@$%:;?!`\(\).,\/\\]+\s+)[|]?[|]?(\s+[A-Za-z0-9 -_*#@$%:;?!`\(\).,\/\\]+\s+)[|]?[|]?(\s+[A-Za-z0-9 -_*#@$%:;?!`\(\).,\/\\]+\s+)[|]?\r?\n?/g,
 };
 
 export default {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { EditorState, ContentState, CompositeDecorator } from 'draft-js';
-// import { List, Repeat, Range } from 'immutable';
 import styles from '../utils/prism.css';
 import classNames from 'classnames';
 import regex from '../utils/regex';
@@ -72,6 +71,13 @@ const findWithRegex = (reg, contentBlock, callback) => {
   while ((matchArr = reg.exec(text)) !== null) {
     start = matchArr.index;
     callback(start, start + matchArr[0].length);
+  }
+};
+
+const findWithBlockRegex = (reg, contentBlock, callback) => {
+  const text = contentBlock.getText();
+  if (text.match(reg)) {
+    callback(0, text.length);
   }
 };
 
@@ -147,31 +153,41 @@ const inlineDecorator = [
 const blockDecorator = [
   {
     strategy: (contentBlock, callback) =>
-      findWithRegex(regex.block.heading, contentBlock, callback),
+      findWithBlockRegex(regex.block.heading, contentBlock, callback),
     component: props => {
-      const level = regex.block.heading.exec(props.children[0].props.text);
-      console.log(level);
-      return (
-        <h2>{props.children}</h2>
+      const level = regex.block.heading.exec(props.children[0].props.text)[1];
+      regex.block.heading.lastIndex = 0;
+      return React.createElement(
+        `h${level.length}`,
+        props,
+        props.children
       );
     },
     props: { type: 'heading' }
   },
+  // {
+  //   strategy: (contentBlock, callback) =>
+  //     findWithBlockRegex(regex.block.blockquote, contentBlock, callback),
+  //   component: props => {
+  //     const group = regex.block.blockquote.exec(props.children[0].props.text);
+  //     regex.block.blockquote.lastIndex = 0;
+  //     return (
+  //       <blockquote {...props}>
+  //         {props.children}
+  //       </blockquote>
+  //     );
+  //   },
+  //   props: { type: 'blockquote' }
+  // },
   {
     strategy: (contentBlock, callback) =>
-      findWithRegex(regex.inline.blockquote, contentBlock, callback),
-    component: InlineComponent,
-    props: { type: 'blockquote' }
-  },
-  {
-    strategy: (contentBlock, callback) =>
-      findWithRegex(regex.inline.list, contentBlock, callback),
+      findWithBlockRegex(regex.block.list, contentBlock, callback),
     component: InlineComponent,
     props: { type: 'list' }
   },
   {
     strategy: (contentBlock, callback) =>
-      findWithTableRegex(regex.inline.table, contentBlock, callback),
+      findWithTableRegex(regex.block.table, contentBlock, callback),
     component: InlineComponent,
     props: { type: 'table' }
   },

@@ -146,3 +146,7 @@ pre[class*="language-"] {
 .token.table {
 	color: red;
 }
+
+blockquote {
+	background-color: #DDD;
+}
