@@ -142,11 +142,15 @@ pre[class*="language-"] {
 }
 
 .token.blockquote,
-.token.list,
 .token.table {
 	color: red;
 }
-
-blockquote {
-	background-color: #DDD;
+.token.hr {
+	color: red;
+}
+.token.img {
+	color: red;
+}
+.token.taskList {
+	color: red;
 }

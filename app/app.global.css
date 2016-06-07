@@ -8,6 +8,18 @@ html, body {
 .matched {
   color: red;
 }
+.matched-0 {
+  color: red;
+}
+.matched-1 {
+  color: red;
+}
+.matched-2 {
+  color: grey;
+}
+.matched-3 {
+  color: green;
+}
 .bold {
   font-weight: bold;
 }
