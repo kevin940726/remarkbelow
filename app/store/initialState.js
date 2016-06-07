@@ -27,7 +27,9 @@ img:
 ![alt text](http://path/to/img.jpg "Title")
 
 taskList:
-- [ ] fuck
+- [ ] dick
+- [x] fuck
+
 
 Bullet list:
 
@@ -138,6 +140,12 @@ const inlineDecorator = [
       findWithRegex(regex.inline.taskList, contentBlock, callback),
     component: InlineComponent,
     props: { type: 'taskList' }
+  },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithRegex(regex.inline.taskListx, contentBlock, callback),
+    component: InlineComponent,
+    props: { type: 'taskListx' }
   },
   {
     strategy: (contentBlock, callback) =>
