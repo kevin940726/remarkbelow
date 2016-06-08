@@ -154,3 +154,6 @@ pre[class*="language-"] {
 .token.taskList {
 	color: red;
 }
+.token.taskListx {
+	color: red;
+}

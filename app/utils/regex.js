@@ -15,6 +15,7 @@ const inline = {
   hr: /^( *[-*_]){3,} *(?:\n+|$)/g,
   img: /(!\[.*?\]\()(.+?)(\))/g,
   taskList: /^-\s\[\s\]\s+([A-ZaZa-z0-9 -_*#@$%:;?!`\(\).,\/\\])+/g,
+  taskListx: /^-\s\[x\]\s+([A-ZaZa-z0-9 -_*#@$%:;?!`\(\).,\/\\])+/g,
 };
 
 inline.link = new RegExp(
