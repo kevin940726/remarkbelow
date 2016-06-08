@@ -203,16 +203,12 @@ const blockDecorator = [
     },
     props: { type: 'heading' }
   },
-  {
-    strategy: (contentBlock, callback) =>
-      findWithBlockRegex(regex.block.blockquote, contentBlock, callback),
-    component: props => (
-      <blockquote {...props}>
-        {props.children}
-      </blockquote>
-    ),
-    props: { type: 'blockquote' }
-  },
+  // {
+  //   strategy: (contentBlock, callback) =>
+  //     findWithBlockRegex(regex.block.blockquote, contentBlock, callback),
+  //   component: BlockQuote,
+  //   props: { type: 'blockquote' }
+  // },
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.list, contentBlock, callback),
