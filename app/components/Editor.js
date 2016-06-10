@@ -3,7 +3,7 @@ import { Editor as DraftEditor } from 'draft-js';
 import styles from './Editor.css';
 import blockRenderer from '../utils/blockRenderer';
 
-const Editor = ({ refCallBack, editorRef, editorState, onChange, onFocus }) => (
+const Editor = ({ refCallBack, editorRef, editorState, onChange, onFocus, handleReturn }) => (
   <div
     className={styles.editor}
     onClick={() => onFocus(editorRef)}
@@ -12,7 +12,7 @@ const Editor = ({ refCallBack, editorRef, editorState, onChange, onFocus }) => (
       ref={refCallBack}
       editorState={editorState}
       onChange={onChange}
-      blockRendererFn={blockRenderer}
+      handleReturn={() => handleReturn(editorState)}
     />
   </div>
 );

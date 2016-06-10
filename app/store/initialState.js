@@ -125,6 +125,12 @@ const InlineComponent = props => (
   </span>
 );
 
+const BlockComponent = props => (
+  <div {...props} className={classNames(styles.token, styles[props.type])}>
+    {props.children}
+  </div>
+);
+
 const inlineDecorator = [
   {
     strategy: (contentBlock, callback) =>
@@ -200,23 +206,15 @@ const blockDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithBlockRegex(regex.block.heading, contentBlock, callback),
-    component: props => {
-      const level = regex.block.heading.exec(props.children[0].props.text)[1];
-      regex.block.heading.lastIndex = 0;
-      return React.createElement(
-        `h${level.length}`,
-        props,
-        props.children
-      );
-    },
+    component: BlockComponent,
     props: { type: 'heading' }
   },
-  // {
-  //   strategy: (contentBlock, callback) =>
-  //     findWithBlockRegex(regex.block.blockquote, contentBlock, callback),
-  //   component: BlockQuote,
-  //   props: { type: 'blockquote' }
-  // },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithBlockRegex(regex.block.blockquote, contentBlock, callback),
+    component: BlockComponent,
+    props: { type: 'blockquote' }
+  },
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.list, contentBlock, callback),
