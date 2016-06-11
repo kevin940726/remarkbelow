@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Editor from '../components/Editor';
 import { saveEditorRef, editorOnChange, viewEditorOnChange } from '../actions/editor';
-import { RichUtils, EditorState } from 'draft-js';
+import { RichUtils, EditorState, Modifier } from 'draft-js';
 import { block } from '../utils/regex';
 
 const mapStateToProps = state => ({
@@ -31,6 +31,23 @@ const mapDispatchToProps = dispatch => ({
 
     return false;
   },
+  onTab: editorState => {
+    const insertedTabContent = Modifier.insertText(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      '    '
+    );
+
+    const insertedTabState = EditorState.push(
+      editorState,
+      insertedTabContent,
+      'insert-characters'
+    );
+    dispatch(editorOnChange(insertedTabState));
+    setTimeout(() => {
+      dispatch(viewEditorOnChange(EditorState.createWithContent(insertedTabState.getCurrentContent())));
+    });
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);
