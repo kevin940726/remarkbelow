@@ -92,6 +92,7 @@ reist
 
 A [link](http://example.com).`;
 
+/* codeBlock block workaround */
 let codeBlockMap = OrderedMap();
 const parsedText = defaultText.replace(regex.block.codeBlock, (match, p1, p2, p3, offset) => {
   codeBlockMap = codeBlockMap.set(offset.toString(), match);
@@ -110,6 +111,7 @@ defaultContent.getBlockMap()
       codeBlockMap.get(/\$\$CODEBLOCK__(\d+)\$\$/g.exec(block.getText())[1])
     );
   });
+/* -------------------------- */
 
 const findWithRegex = (reg, contentBlock, callback) => {
   const text = contentBlock.getText();

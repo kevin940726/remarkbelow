@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Editor from '../components/Editor';
 import { saveEditorRef, editorOnChange } from '../actions/editor';
-import { Modifier, EditorState, RichUtils } from 'draft-js';
+import { RichUtils } from 'draft-js';
 import { block } from '../utils/regex';
 
 const mapStateToProps = state => ({
