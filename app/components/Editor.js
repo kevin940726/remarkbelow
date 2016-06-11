@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Editor as DraftEditor } from 'draft-js';
 import styles from './Editor.css';
-import blockRenderer from '../utils/blockRenderer';
 
 const Editor = ({ refCallBack, editorRef, editorState, onChange, onFocus, handleReturn }) => (
   <div

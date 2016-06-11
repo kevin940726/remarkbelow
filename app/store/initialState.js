@@ -296,5 +296,6 @@ const regexDecorator = new CompositeDecorator([
 export default {
   editor: {
     editorState: EditorState.createWithContent(parsedContent, regexDecorator),
+    viewEditorState: EditorState.createWithContent(parsedContent),
   },
 };

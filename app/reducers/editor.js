@@ -10,6 +10,10 @@ export default handleActions({
     ...state,
     editorState: action.payload,
   }),
+  VIEW_EDITOR_ON_CHANGE: (state, action) => ({
+    ...state,
+    viewEditorState: action.payload,
+  }),
 }, {
   editorState: EditorState.createEmpty(),
 });

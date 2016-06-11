@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Editor from '../components/Editor';
-import { saveEditorRef, editorOnChange } from '../actions/editor';
-import { RichUtils } from 'draft-js';
+import { saveEditorRef, editorOnChange, viewEditorOnChange } from '../actions/editor';
+import { RichUtils, EditorState } from 'draft-js';
 import { block } from '../utils/regex';
 
 const mapStateToProps = state => ({
@@ -13,6 +13,9 @@ const mapDispatchToProps = dispatch => ({
   refCallBack: ref => dispatch(saveEditorRef(ref)),
   onChange: editorState => {
     dispatch(editorOnChange(editorState));
+    setTimeout(() => {
+      dispatch(viewEditorOnChange(EditorState.createWithContent(editorState.getCurrentContent())));
+    });
   },
   onFocus: ref => ref.focus(),
   handleReturn: editorState => {
