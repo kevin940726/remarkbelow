@@ -1,10 +1,11 @@
 import React from 'react';
-import { EditorState, ContentState, CompositeDecorator } from 'draft-js';
+import { EditorState, ContentState, CompositeDecorator, Modifier, SelectionState } from 'draft-js';
 import styles from '../utils/prism.css';
 import classNames from 'classnames';
 import regex from '../utils/regex';
+import { OrderedMap } from 'immutable';
 
-const defaultContent = ContentState.createFromText(
+const defaultText =
 `# Heading
 =======
 ## Sub-heading
@@ -13,6 +14,11 @@ const defaultContent = ContentState.createFromText(
 
 Paragraphs are separated
 by a blank line.
+
+\`\`\`bash
+$ npm install
+$ npm start
+\`\`\`
 
 Two spaces at the end of a line leave a
 line break.
@@ -29,6 +35,10 @@ taskList:
 - [ ] dick
 - [x] fuck
 
+\`\`\`js
+const foo = 'bar';
+foo.replace(/b/, 'c');
+\`\`\`
 
 Bullet list:
 
@@ -80,8 +90,26 @@ reist
 >wnfoefm
 
 
-A [link](http://example.com).`
-);
+A [link](http://example.com).`;
+
+let codeBlockMap = OrderedMap();
+const parsedText = defaultText.replace(regex.block.codeBlock, (match, p1, p2, p3, offset) => {
+  codeBlockMap = codeBlockMap.set(offset.toString(), match);
+  return `$$CODEBLOCK__${offset}$$`;
+});
+
+const defaultContent = ContentState.createFromText(parsedText);
+
+let parsedContent = defaultContent;
+defaultContent.getBlockMap()
+  .filter(block => block.getText().match(/\$\$CODEBLOCK__\d+\$\$/g))
+  .forEach(block => {
+    parsedContent = Modifier.replaceText(
+      parsedContent,
+      SelectionState.createEmpty(block.getKey()).set('focusOffset', block.getText().length),
+      codeBlockMap.get(/\$\$CODEBLOCK__(\d+)\$\$/g.exec(block.getText())[1])
+    );
+  });
 
 const findWithRegex = (reg, contentBlock, callback) => {
   const text = contentBlock.getText();
@@ -246,6 +274,16 @@ const blockDecorator = [
     component: InlineComponent,
     props: { type: 'table' }
   },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithBlockRegex(regex.block.codeBlock, contentBlock, callback),
+    component: props => (
+      <pre {...props} className="languages-">
+        {props.children}
+      </pre>
+    ),
+    props: { type: 'codeBlock' }
+  }
 ];
 
 const regexDecorator = new CompositeDecorator([
@@ -255,6 +293,6 @@ const regexDecorator = new CompositeDecorator([
 
 export default {
   editor: {
-    editorState: EditorState.createWithContent(defaultContent, regexDecorator),
+    editorState: EditorState.createWithContent(parsedContent, regexDecorator),
   },
 };
