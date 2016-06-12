@@ -93,9 +93,23 @@ A [link](http://example.com).`;
 
 /* --- codeBlock block workaround --- */
 let codeBlockMap = OrderedMap();
-const parsedText = defaultText.replace(regex.block.codeBlock, (match, p1, p2, p3, offset) => {
+let parsedText = defaultText.replace(regex.block.codeBlock, (match, p1, p2, p3, offset) => {
   codeBlockMap = codeBlockMap.set(offset.toString(), match);
   return `$$CODEBLOCK__${offset}$$`;
+});
+/* --- list block workaround --- */
+let listMap = OrderedMap();
+parsedText = defaultText.replace(regex.block.list, (match, offset) => {
+  listMap = listMap.set(offset.toString(), match);
+  console.log(match)
+  return `$$LIST__${offset}$$`;
+});
+
+let tableMap = OrderedMap();
+parsedText = defaultText.replace(regex.block.table, (match, offset) => {
+  tableMap = tableMap.set(offset.toString(), match);
+  console.log(match)
+  return `$$TABLE__${offset}$$`;
 });
 
 const defaultContent = ContentState.createFromText(parsedText);
@@ -108,6 +122,24 @@ defaultContent.getBlockMap()
       parsedContent,
       SelectionState.createEmpty(block.getKey()).set('focusOffset', block.getText().length),
       codeBlockMap.get(/\$\$CODEBLOCK__(\d+)\$\$/g.exec(block.getText())[1])
+    );
+  });
+defaultContent.getBlockMap()
+  .filter(block => block.getText().match(/\$\$LIST__\d+\$\$/g))
+  .forEach(block => {
+    parsedContent = Modifier.replaceText(
+      parsedContent,
+      SelectionState.createEmpty(block.getKey()).set('focusOffset', block.getText().length),
+      listMap.get(/\$\$LIST__(\d+)\$\$/g.exec(block.getText())[1])
+    );
+  });
+defaultContent.getBlockMap()
+  .filter(block => block.getText().match(/\$\$TABLE__\d+\$\$/g))
+  .forEach(block => {
+    parsedContent = Modifier.replaceText(
+      parsedContent,
+      SelectionState.createEmpty(block.getKey()).set('focusOffset', block.getText().length),
+      tableMap.get(/\$\$TABLE__(\d+)\$\$/g.exec(block.getText())[1])
     );
   });
 /* ---------------------------------- */
