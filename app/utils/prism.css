@@ -157,3 +157,7 @@ pre[class*="language-"] {
 .token.taskListx {
 	color: red;
 }
+
+img.img {
+	max-width: 100%;
+}

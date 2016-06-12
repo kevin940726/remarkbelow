@@ -156,12 +156,30 @@ const blockDecorator = [
       </pre>
     ),
     props: { type: 'codeBlock' }
-  }
+  },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithRegex(regex.block.img, contentBlock, callback),
+    component: props => {
+      const group = regex.block.img.exec(props.children[0].props.text);
+      regex.block.img.lastIndex = 0;
+
+      return (
+        <img
+          className={styles.img}
+          src={group[2]}
+          alt={group[1]}
+          title={group[4]}
+        />
+      );
+    },
+    props: { type: 'img' }
+  },
 ];
 
 const syntaxDecorator = new CompositeDecorator([
-  ...inlineDecorator,
   ...blockDecorator,
+  ...inlineDecorator,
 ]);
 
 export default syntaxDecorator;

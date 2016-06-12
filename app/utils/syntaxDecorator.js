@@ -182,8 +182,8 @@ const blockDecorator = [
 ];
 
 const syntaxDecorator = new CompositeDecorator([
-  ...inlineDecorator,
   ...blockDecorator,
+  ...inlineDecorator,
 ]);
 
 export default syntaxDecorator;
