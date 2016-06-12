@@ -3,6 +3,7 @@ import Editor from '../components/Editor';
 import { saveEditorRef, editorOnChange, viewEditorOnChange } from '../actions/editor';
 import { RichUtils, EditorState, Modifier } from 'draft-js';
 import { block } from '../utils/regex';
+import renderDecorator from '../utils/renderDecorator';
 
 const mapStateToProps = state => ({
   editorRef: state.editor.editorRef,
@@ -14,7 +15,9 @@ const mapDispatchToProps = dispatch => ({
   onChange: editorState => {
     dispatch(editorOnChange(editorState));
     setTimeout(() => {
-      dispatch(viewEditorOnChange(EditorState.createWithContent(editorState.getCurrentContent())));
+      dispatch(viewEditorOnChange(
+        EditorState.createWithContent(editorState.getCurrentContent(), renderDecorator)
+      ));
     });
   },
   onFocus: ref => ref.focus(),
@@ -45,7 +48,9 @@ const mapDispatchToProps = dispatch => ({
     );
     dispatch(editorOnChange(insertedTabState));
     setTimeout(() => {
-      dispatch(viewEditorOnChange(EditorState.createWithContent(insertedTabState.getCurrentContent())));
+      dispatch(viewEditorOnChange(
+        EditorState.createWithContent(insertedTabState.getCurrentContent(), renderDecorator)
+      ));
     });
   }
 });
