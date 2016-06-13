@@ -8,7 +8,7 @@
     "test": "cross-env NODE_ENV=test mocha --compilers js:babel-register --recursive --require ./test/setup.js test/**/*.spec.js",
     "test-watch": "npm test -- --watch",
     "test-e2e": "cross-env NODE_ENV=test mocha --compilers js:babel-register --require ./test/setup.js --require co-mocha ./test/e2e.js",
-    "lint": "eslint app test *.js",
+    "lint": "eslint app",
     "hot-server": "node -r babel-register server.js",
     "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.electron.js --progress --profile --colors",
     "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.production.js --progress --profile --colors",
@@ -20,6 +20,9 @@
     "postinstall": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
     "dev": "concurrently --kill-others \"npm run hot-server\" \"npm run start-hot\""
   },
+  "pre-push": [
+    "lint"
+  ],
   "bin": {
     "electron": "./node_modules/.bin/electron"
   },
@@ -66,7 +69,7 @@
     "electron-packager": "^7.0.3",
     "electron-prebuilt": "^1.2.1",
     "electron-rebuild": "^1.1.5",
-    "eslint": "^2.11.1",
+    "eslint": "^2.12.0",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.2.3",
@@ -79,6 +82,7 @@
     "minimist": "^1.2.0",
     "mocha": "^2.5.3",
     "node-libs-browser": "^1.0.0",
+    "pre-push": "^0.1.1",
     "react-addons-test-utils": "^15.0.1",
     "redux-devtools": "^3.2.0",
     "redux-devtools-dock-monitor": "^1.1.1",

@@ -101,14 +101,12 @@ let parsedText = defaultText.replace(regex.block.codeBlock, (match, p1, p2, p3, 
 let listMap = OrderedMap();
 parsedText = defaultText.replace(regex.block.list, (match, offset) => {
   listMap = listMap.set(offset.toString(), match);
-  console.log(match)
   return `$$LIST__${offset}$$`;
 });
 
 let tableMap = OrderedMap();
 parsedText = defaultText.replace(regex.block.table, (match, offset) => {
   tableMap = tableMap.set(offset.toString(), match);
-  console.log(match)
   return `$$TABLE__${offset}$$`;
 });
 
