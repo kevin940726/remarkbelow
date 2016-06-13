@@ -21,6 +21,21 @@ const findWithBlockRegex = (reg, contentBlock, callback) => {
   }
 };
 
+var emojiParser = require('emoji-parser');
+emojiParser.init('app/emoji-parser').update(true, null, null);
+
+const findEmoji = (reg, contentBlock, callback) => {
+  const text = contentBlock.getText();
+  var textWithEmoji = emojiParser.parse(text, '');
+  let matchArr;
+  let offset = 0;
+  while((matchArr = regex.inline.img.exec(textWithEmoji)) !== null)
+  {
+      callback(matchArr.index - offset, matchArr.index - offset + matchArr[3].length);
+      offset += matchArr[0].length - matchArr[3].length;
+  }
+};
+
 const findWithTableRegex = (reg, contentBlock, callback) => {
   const text = contentBlock.getText();
   let matchArr;
@@ -83,6 +98,21 @@ const inlineDecorator = [
         {props.children}
       </code>
     ),
+    props: { type: 'code' }
+  },
+  {
+    strategy: (contentBlock, callback) =>
+      findEmoji(null, contentBlock, callback),
+    component: props => {
+      var emoji = emojiParser.parse(props.children[0].props.text, '../app/emoji-parser');
+      var rex = /<img[^>]+src="([^">]+)" title="([^">]+)" alt="([^">]+)" \/>/g;
+      var y = rex.exec(emoji);
+      return <img
+          src={y[1]}
+          title={y[2]}
+          alt={y[3]}
+        />;
+    },
     props: { type: 'code' }
   },
   {

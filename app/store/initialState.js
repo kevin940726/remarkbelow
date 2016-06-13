@@ -11,6 +11,10 @@ const defaultText =
 -----------
 ### Another deeper heading
 
+This is a :telephone: 
+
+:smiley[:D]:
+
 Paragraphs are separated
 by a blank line.
 
@@ -20,7 +24,7 @@ $ npm start
 \`\`\`
 
     indentation
-    
+
 Two spaces at the end of a line leave a
 line break.
 
