@@ -27,6 +27,7 @@ const Editor = ({
       onChange={onChange}
       handleReturn={() => handleReturn(editorState)}
       onTab={() => onTab(editorState)}
+      blockStyleFn={() => 'block-line'}
       spellCheck
     />
   </div>

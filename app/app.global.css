@@ -26,3 +26,21 @@ html, body {
 .italic {
   font-style: italic;
 }
+
+body {
+  counter-reset: section;
+}
+.block-line {
+  padding-left: 30px;
+  position: relative;
+}
+.block-line::before {
+  counter-increment: section;
+  content: counter(section);
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  color: #AAA;
+}
