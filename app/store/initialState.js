@@ -152,7 +152,7 @@ tokenHackRegexes
         parsedContent = Modifier.replaceText(
           parsedContent,
           SelectionState.createEmpty(block.getKey()).set('focusOffset', text.length),
-          regex.mapObject.get(match[1])
+          re.mapObject.get(match[1])
         );
       });
   });
