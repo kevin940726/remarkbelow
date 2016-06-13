@@ -31,6 +31,21 @@ const mapDispatchToProps = dispatch => ({
       dispatch(editorOnChange(newEditorState));
       return true;
     }
+    if (block.list.exec(contentBlock.getText())) {
+      const newEditorState = RichUtils.insertSoftNewline(editorState);
+      dispatch(editorOnChange(newEditorState));
+      return true;
+    }
+    if (block.table.exec(contentBlock.getText())) {
+      const newEditorState = RichUtils.insertSoftNewline(editorState);
+      dispatch(editorOnChange(newEditorState));
+      return true;
+    }
+    if (block.blockquote.exec(contentBlock.getText())) {
+      const newEditorState = RichUtils.insertSoftNewline(editorState);
+      dispatch(editorOnChange(newEditorState));
+      return true;
+    }
 
     return false;
   },

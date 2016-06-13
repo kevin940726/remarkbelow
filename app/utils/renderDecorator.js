@@ -77,6 +77,16 @@ const inlineDecorator = [
   },
   {
     strategy: (contentBlock, callback) =>
+      findWithRegex(regex.inline.indentation, contentBlock, callback),
+    component: props => (
+      <code {...props} className="language-">
+        {props.children}
+      </code>
+    ),
+    props: { type: 'code' }
+  },
+  {
+    strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.link, contentBlock, callback),
     component: props => {
       const group = regex.inline.link.exec(props.children[0].props.text);

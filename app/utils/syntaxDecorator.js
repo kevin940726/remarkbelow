@@ -178,7 +178,7 @@ const blockDecorator = [
       </div>
     ),
     props: { type: 'codeBlock' }
-  }
+  },
 ];
 
 const syntaxDecorator = new CompositeDecorator([
