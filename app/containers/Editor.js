@@ -38,7 +38,7 @@ const mapDispatchToProps = dispatch => ({
     const insertedTabContent = Modifier.insertText(
       editorState.getCurrentContent(),
       editorState.getSelection(),
-      '    '
+      '\t'
     );
 
     const insertedTabState = EditorState.push(
