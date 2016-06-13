@@ -1,11 +1,10 @@
-import React from 'react';
-import { EditorState, ContentState, CompositeDecorator } from 'draft-js';
-// import { List, Repeat, Range } from 'immutable';
-import styles from '../utils/prism.css';
-import classNames from 'classnames';
+import { EditorState, ContentState, Modifier, SelectionState } from 'draft-js';
 import regex from '../utils/regex';
+import { OrderedMap } from 'immutable';
+import syntaxDecorator from '../utils/syntaxDecorator';
+import renderDecorator from '../utils/renderDecorator';
 
-const defaultContent = ContentState.createFromText(
+const defaultText =
 `# Heading
 =======
 ## Sub-heading
@@ -19,16 +18,30 @@ This is a :telephone: :smiley[:D]:
 Paragraphs are separated
 by a blank line.
 
+\`\`\`bash
+$ npm install
+$ npm start
+\`\`\`
+
 Two spaces at the end of a line leave a
 line break.
 
 Text attributes _italic_, *italic*, __bold__, **bold**, \`monospace\`, ~~strike~~.
 
 Horizontal rule:
-
 ---
 
-![alt text](http://path/to/img.jpg "Title")
+img:
+![alt text](https://pbs.twimg.com/profile_images/378800000822867536/3f5a00acf72df93528b6bb7cd0a4fd0c.jpeg "Title")
+
+taskList:
+- [ ] dick
+- [x] fuck
+
+\`\`\`js
+const foo = 'bar';
+foo.replace(/b/, 'c');
+\`\`\`
 
 Bullet list:
 
@@ -80,6 +93,7 @@ reist
 >wnfoefm
 
 
+<<<<<<< HEAD
 A [link](http://example.com).`
 );
 
@@ -236,9 +250,66 @@ const regexDecorator = new CompositeDecorator([
   ...inlineDecorator,
   ...blockDecorator,
 ]);
+=======
+A [link](http://example.com).`;
+
+/* --- codeBlock block workaround --- */
+let codeBlockMap = OrderedMap();
+let parsedText = defaultText.replace(regex.block.codeBlock, (match, p1, p2, p3, offset) => {
+  codeBlockMap = codeBlockMap.set(offset.toString(), match);
+  return `$$CODEBLOCK__${offset}$$`;
+});
+/* --- list block workaround --- */
+let listMap = OrderedMap();
+parsedText = defaultText.replace(regex.block.list, (match, offset) => {
+  listMap = listMap.set(offset.toString(), match);
+  console.log(match)
+  return `$$LIST__${offset}$$`;
+});
+
+let tableMap = OrderedMap();
+parsedText = defaultText.replace(regex.block.table, (match, offset) => {
+  tableMap = tableMap.set(offset.toString(), match);
+  console.log(match)
+  return `$$TABLE__${offset}$$`;
+});
+
+const defaultContent = ContentState.createFromText(parsedText);
+
+let parsedContent = defaultContent;
+defaultContent.getBlockMap()
+  .filter(block => block.getText().match(/\$\$CODEBLOCK__\d+\$\$/g))
+  .forEach(block => {
+    parsedContent = Modifier.replaceText(
+      parsedContent,
+      SelectionState.createEmpty(block.getKey()).set('focusOffset', block.getText().length),
+      codeBlockMap.get(/\$\$CODEBLOCK__(\d+)\$\$/g.exec(block.getText())[1])
+    );
+  });
+defaultContent.getBlockMap()
+  .filter(block => block.getText().match(/\$\$LIST__\d+\$\$/g))
+  .forEach(block => {
+    parsedContent = Modifier.replaceText(
+      parsedContent,
+      SelectionState.createEmpty(block.getKey()).set('focusOffset', block.getText().length),
+      listMap.get(/\$\$LIST__(\d+)\$\$/g.exec(block.getText())[1])
+    );
+  });
+defaultContent.getBlockMap()
+  .filter(block => block.getText().match(/\$\$TABLE__\d+\$\$/g))
+  .forEach(block => {
+    parsedContent = Modifier.replaceText(
+      parsedContent,
+      SelectionState.createEmpty(block.getKey()).set('focusOffset', block.getText().length),
+      tableMap.get(/\$\$TABLE__(\d+)\$\$/g.exec(block.getText())[1])
+    );
+  });
+/* ---------------------------------- */
+>>>>>>> 1a09fc79a4dd8d996a9757bbeae6876d303b567a
 
 export default {
   editor: {
-    editorState: EditorState.createWithContent(defaultContent, regexDecorator),
+    editorState: EditorState.createWithContent(parsedContent, syntaxDecorator),
+    viewEditorState: EditorState.createWithContent(parsedContent, renderDecorator),
   },
 };

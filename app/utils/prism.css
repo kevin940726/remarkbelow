@@ -151,4 +151,13 @@ pre[class*="language-"] {
 .token.img {
 	color: red;
 }
+.token.taskList {
+	color: red;
+}
+.token.taskListx {
+	color: red;
+}
 
+img.img {
+	max-width: 100%;
+}

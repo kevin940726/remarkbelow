@@ -2,12 +2,33 @@ import React, { PropTypes } from 'react';
 import { Editor as DraftEditor } from 'draft-js';
 import styles from './Editor.css';
 
-const Editor = ({ refCallBack, editorRef, editorState, onChange, onFocus }) => (
+const Editor = ({
+  refCallBack,
+  editorRef,
+  editorState,
+  onChange,
+  onFocus,
+  handleReturn,
+  onTab
+}) => (
   <div
     className={styles.editor}
     onClick={() => onFocus(editorRef)}
+    onKeyDown={e => {
+      if (e.keyCode === 9) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }}
   >
-    <DraftEditor ref={refCallBack} editorState={editorState} onChange={onChange} />
+    <DraftEditor
+      ref={refCallBack}
+      editorState={editorState}
+      onChange={onChange}
+      handleReturn={() => handleReturn(editorState)}
+      onTab={() => onTab(editorState)}
+      spellCheck
+    />
   </div>
 );
 

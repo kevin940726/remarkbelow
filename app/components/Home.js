@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styles from './Home.css';
 import Editor from '../containers/Editor';
+import ViewEditor from '../containers/ViewEditor';
 
 export default class Home extends Component {
   render() {
@@ -8,6 +9,7 @@ export default class Home extends Component {
       <div>
         <div className={styles.container}>
           <Editor />
+          <ViewEditor />
         </div>
       </div>
     );
