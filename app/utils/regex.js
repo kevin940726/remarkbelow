@@ -9,6 +9,7 @@ const inline = {
   inside: /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/g,
   href: /\s*<?([\s\S]*?)>?(?:\s+['"]([\s\S]*?)['"])?\s*/g,
   url: /(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g,
+  indentation: /^( {4}[^\n]+\n*)+/g,
 };
 
 inline.link = new RegExp(
