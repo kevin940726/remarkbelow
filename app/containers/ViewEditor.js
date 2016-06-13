@@ -5,10 +5,10 @@ const mapStateToProps = state => ({
   editorState: state.editor.viewEditorState,
 });
 
-const mapDispatchToProps = dispatch => ({
-  onChange: editorState => {
+// const mapDispatchToProps = dispatch => ({
+//   onChange: editorState => {
+//
+//   },
+// });
 
-  },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ViewEditor);
+export default connect(mapStateToProps)(ViewEditor);

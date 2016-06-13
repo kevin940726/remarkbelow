@@ -101,64 +101,67 @@ let codeBlockMap = OrderedMap();
 let listMap = OrderedMap();
 let tableMap = OrderedMap();
 let blockQuoteMap = OrderedMap();
-let parsedText = defaultText
+const parsedText = defaultText
   .replace(regex.block.codeBlock, (match, p1, p2, p3, offset) => {
-    codeBlockMap = codeBlockMap.set(offset.toString(), match.replace(/\n$/, ""));
+    codeBlockMap = codeBlockMap.set(offset.toString(), match.replace(/\n$/, ''));
     return `$$CODEBLOCK__${offset}$$`;
   })
   .replace(regex.block.list, (match, offset) => {
-    listMap = listMap.set(offset.toString(), match.replace(/\n$/, ""));
+    listMap = listMap.set(offset.toString(), match.replace(/\n$/, ''));
     return `$$LIST__${offset}$$`;
   })
   .replace(regex.block.table, (match, offset) => {
-    tableMap = tableMap.set(offset.toString(), match.replace(/\n$/, ""));
+    tableMap = tableMap.set(offset.toString(), match.replace(/\n$/, ''));
     return `$$TABLE__${offset}$$`;
   })
   .replace(regex.block.blockquote, (match, offset) => {
-    blockQuoteMap = blockQuoteMap.set(offset.toString(), match.replace(/\n$/, ""));
+    blockQuoteMap = blockQuoteMap.set(offset.toString(), match.replace(/\n$/, ''));
     return `$$BLOCKQUITE__${offset}$$`;
   });
 
 const defaultContent = ContentState.createFromText(parsedText);
 
 const tokenHackRegexes = [
-{
-  withoutGroup: /\$\$BLOCKQUITE__\d+\$\$/g,
-  withGroup: /\$\$BLOCKQUITE__(\d+)\$\$/g,
-  mapObject: blockQuoteMap
-}, 
-{
-  withoutGroup: /\$\$LIST__\d+\$\$/g,
-  withGroup: /\$\$LIST__(\d+)\$\$/g,
-  mapObject: listMap
-}, 
-{
-  withoutGroup: /\$\$CODEBLOCK__\d+\$\$/g,
-  withGroup: /\$\$CODEBLOCK__(\d+)\$\$/g,
-  mapObject: codeBlockMap
-}, 
-{
-  withoutGroup: /\$\$TABLE__\d+\$\$/g,
-  withGroup: /\$\$TABLE__(\d+)\$\$/g,
-  mapObject: tableMap
-}]
+  {
+    withoutGroup: /\$\$BLOCKQUITE__\d+\$\$/g,
+    withGroup: /\$\$BLOCKQUITE__(\d+)\$\$/g,
+    mapObject: blockQuoteMap
+  },
+  {
+    withoutGroup: /\$\$LIST__\d+\$\$/g,
+    withGroup: /\$\$LIST__(\d+)\$\$/g,
+    mapObject: listMap
+  },
+  {
+    withoutGroup: /\$\$CODEBLOCK__\d+\$\$/g,
+    withGroup: /\$\$CODEBLOCK__(\d+)\$\$/g,
+    mapObject: codeBlockMap
+  },
+  {
+    withoutGroup: /\$\$TABLE__\d+\$\$/g,
+    withGroup: /\$\$TABLE__(\d+)\$\$/g,
+    mapObject: tableMap
+  },
+];
 
 let parsedContent = defaultContent;
 
 tokenHackRegexes
-  .forEach(regex => {
+  .forEach(re => {
     defaultContent.getBlockMap()
-      .filter(block => block.getText().match(new RegExp(regex.withoutGroup)))
+      .filter(block => block.getText().match(new RegExp(re.withoutGroup)))
       .forEach(block => {
-        let text = block.getText();
-        let match = new RegExp(regex.withGroup).exec(text)
+        const text = block.getText();
+        const match = new RegExp(re.withGroup).exec(text);
         parsedContent = Modifier.replaceText(
           parsedContent,
           SelectionState.createEmpty(block.getKey()).set('focusOffset', text.length),
-          regex.mapObject.get(match[1])
+          re.mapObject.get(match[1])
         );
       });
-  })/* ---------------------------------- */
+  });
+/* ---------------------------------- */
+
 
 export default {
   editor: {
