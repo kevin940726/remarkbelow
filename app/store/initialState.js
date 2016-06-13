@@ -12,6 +12,10 @@ const defaultContent = ContentState.createFromText(
 -----------
 ### Another deeper heading
 
+This is a :telephone: :smiley[:D]:
+
+    code
+
 Paragraphs are separated
 by a blank line.
 
@@ -89,6 +93,7 @@ const findWithRegex = (reg, contentBlock, callback) => {
   }
 };
 
+
 const findWithTableRegex = (reg, contentBlock, callback) => {
   const text = contentBlock.getText();
   let matchArr;
@@ -107,6 +112,7 @@ const findWithTableRegex = (reg, contentBlock, callback) => {
     });
   }
 };
+
 
 const InlineComponent = props => (
   <span {...props} className={classNames(styles.token, styles[props.type])}>
@@ -151,6 +157,16 @@ const inlineDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.code, contentBlock, callback),
+    component: props => (
+      <code {...props} className="language-">
+        {props.children}
+      </code>
+    ),
+    props: { type: 'code' }
+  },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithRegex(regex.inline.indentation, contentBlock, callback),
     component: props => (
       <code {...props} className="language-">
         {props.children}
