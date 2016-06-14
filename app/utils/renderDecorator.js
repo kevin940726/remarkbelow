@@ -35,7 +35,7 @@ const findEmoji = (reg, contentBlock, callback) => {
   }
 };
 
-const findWithTableRegex = (reg, contentBlock, callback) => {
+let findWithTableRegex = (reg, contentBlock, callback) => {
   const text = contentBlock.getText();
   let matchArr;
   while ((matchArr = reg.exec(text)) !== null) {
