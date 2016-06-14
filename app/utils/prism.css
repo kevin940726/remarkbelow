@@ -161,3 +161,14 @@ pre[class*="language-"] {
 img.img {
 	max-width: 100%;
 }
+
+
+.emoji {
+	font-family: "Apple Color Emoji", "Segoe UI", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 20px;
+	height: 18px;
+  vertical-align: middle;
+	margin-right: 3px;
+}

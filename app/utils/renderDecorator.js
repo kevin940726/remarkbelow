@@ -1,7 +1,6 @@
 import React from 'react';
 import { CompositeDecorator } from 'draft-js';
 import styles from '../utils/prism.css';
-import classNames from 'classnames';
 import regex from '../utils/regex';
 import emojiParser from 'emoji-parser';
 import marked from 'marked';
@@ -39,12 +38,6 @@ const findEmoji = (reg, contentBlock, callback) => {
   }
 };
 
-const InlineComponent = props => (
-  <span {...props} className={classNames(styles.token, styles[props.type])}>
-    {props.children}
-  </span>
-);
-
 const MarkedComponent = props => {
   const text = props.children[0].props.text;
   const html = marked(text);
@@ -56,19 +49,19 @@ const inlineDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.strong, contentBlock, callback),
-    component: InlineComponent,
+    component: props => (<strong>{props.children}</strong>),
     props: { type: 'bold' }
   },
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.italic, contentBlock, callback),
-    component: InlineComponent,
+    component: props => (<em>{props.children}</em>),
     props: { type: 'italic' }
   },
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.strike, contentBlock, callback),
-    component: InlineComponent,
+    component: props => (<s>{props.children}</s>),
     props: { type: 'strike' }
   },
   {
@@ -100,6 +93,7 @@ const inlineDecorator = [
       const y = rex.exec(emoji);
       return (
         <img
+          className={styles.emoji}
           src={y[1]}
           title={y[2]}
           alt={y[3]}
@@ -164,23 +158,30 @@ const blockDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithBlockRegex(regex.block.codeBlock, contentBlock, callback),
-    component: props => (
-      <pre {...props} className="languages-">
-        {props.children}
-      </pre>
-    ),
+    component: props => {
+      const text = props.children[0].props.text;
+      const group = regex.block.codeBlock.exec(text);
+      regex.block.codeBlock.lastIndex = 0;
+
+      return (
+        <pre {...props}>
+          <code className={styles[`language-${group[2]}`]}>
+            {group[3]}
+          </code>
+        </pre>
+      );
+    },
     props: { type: 'codeBlock' }
   },
   {
     strategy: (contentBlock, callback) =>
-      findWithRegex(regex.block.img, contentBlock, callback),
+      findWithBlockRegex(regex.block.img, contentBlock, callback),
     component: props => {
       const group = regex.block.img.exec(props.children[0].props.text);
       regex.block.img.lastIndex = 0;
 
       return (
         <img
-          className={styles.img}
           src={group[2]}
           alt={group[1]}
           title={group[4]}
@@ -189,6 +190,12 @@ const blockDecorator = [
     },
     props: { type: 'img' }
   },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithBlockRegex(regex.block.hr, contentBlock, callback),
+    component: () => (<hr></hr>),
+    props: { type: 'hr' }
+  }
 ];
 
 const syntaxDecorator = new CompositeDecorator([
