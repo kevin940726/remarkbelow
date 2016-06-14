@@ -11,7 +11,7 @@ const defaultText =
 -----------
 ### Another deeper heading
 
-This is a :telephone: 
+This is a :telephone:
 
 :smiley[:D]:
 
@@ -108,15 +108,18 @@ const parsedText = defaultText
   })
   .replace(regex.block.list, (match, offset) => {
     listMap = listMap.set(offset.toString(), match.replace(/\n$/, ''));
-    return `$$LIST__${offset}$$`;
+    const lastChar = match.charAt(match.length - 1);
+    return `$$LIST__${offset}$$${lastChar === '\n' && lastChar}`;
   })
   .replace(regex.block.table, (match, offset) => {
     tableMap = tableMap.set(offset.toString(), match.replace(/\n$/, ''));
-    return `$$TABLE__${offset}$$`;
+    const lastChar = match.charAt(match.length - 1);
+    return `$$TABLE__${offset}$$${lastChar === '\n' && lastChar}`;
   })
   .replace(regex.block.blockquote, (match, offset) => {
     blockQuoteMap = blockQuoteMap.set(offset.toString(), match.replace(/\n$/, ''));
-    return `$$BLOCKQUITE__${offset}$$`;
+    const lastChar = match.charAt(match.length - 1);
+    return `$$BLOCKQUITE__${offset}$$${lastChar === '\n' && lastChar}`;
   });
 
 const defaultContent = ContentState.createFromText(parsedText);

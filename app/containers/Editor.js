@@ -25,23 +25,24 @@ const mapDispatchToProps = dispatch => ({
     const currentContent = editorState.getCurrentContent();
     const selection = editorState.getSelection();
     const contentBlock = currentContent.getBlockForKey(selection.getAnchorKey());
+    const text = contentBlock.getText();
+    const curText = text.charAt(selection.getAnchorOffset() - 1);
 
-    if (block.codeBlockStart.exec(contentBlock.getText())) {
-      const newEditorState = RichUtils.insertSoftNewline(editorState);
-      dispatch(editorOnChange(newEditorState));
-      return true;
-    }
-    if (block.list.exec(contentBlock.getText())) {
-      const newEditorState = RichUtils.insertSoftNewline(editorState);
-      dispatch(editorOnChange(newEditorState));
-      return true;
-    }
-    if (block.table.exec(contentBlock.getText())) {
-      const newEditorState = RichUtils.insertSoftNewline(editorState);
-      dispatch(editorOnChange(newEditorState));
-      return true;
-    }
-    if (block.blockquote.exec(contentBlock.getText())) {
+    if (text.match(block.codeBlockStart) ||
+      text.match(block.list) ||
+      text.match(block.table) ||
+      text.match(block.blockquote)
+    ) {
+      if (curText === '\n') {
+        const newContentState = Modifier.splitBlock(
+          currentContent,
+          selection.set('anchorOffset', selection.getAnchorOffset() - 1)
+        );
+        const newEditorState = EditorState.push(editorState, newContentState, 'split-block');
+        dispatch(editorOnChange(newEditorState));
+        return true;
+      }
+
       const newEditorState = RichUtils.insertSoftNewline(editorState);
       dispatch(editorOnChange(newEditorState));
       return true;
