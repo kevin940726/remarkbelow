@@ -1,12 +1,30 @@
 import React from 'react';
 import { CompositeDecorator } from 'draft-js';
 import styles from '../utils/prism.css';
+import gfm from 'github-markdown-css';
 import regex from '../utils/regex';
 import emojiParser from 'emoji-parser';
 import marked from 'marked';
 import { Parser } from 'html-to-react';
 
 emojiParser.init('app/emoji-parser').update(true, null, null);
+
+const renderer = new marked.Renderer();
+
+renderer.listitem = text => {
+  const group = regex.block.taskList.exec(text);
+  regex.block.taskList.lastIndex = 0;
+
+  if (group) {
+    return (
+      /* eslint-disable max-len */
+      `<li class="${gfm['task-list-item']}"><input type="checkbox" disabled="disabled" ${group[1] === 'x' && 'checked="checked"'} />${group[2]}</li>`
+      /* eslint-disable max-len */
+    );
+  }
+
+  return `<li>${text}</li>`;
+};
 
 const htmlToReactParser = Parser(React);
 
@@ -40,7 +58,7 @@ const findEmoji = (reg, contentBlock, callback) => {
 
 const MarkedComponent = props => {
   const text = props.children[0].props.text;
-  const html = marked(text);
+  const html = marked(text, { renderer });
 
   return htmlToReactParser.parse(`<div>${html}</div>`);
 };
@@ -195,7 +213,7 @@ const blockDecorator = [
       findWithBlockRegex(regex.block.hr, contentBlock, callback),
     component: () => (<hr></hr>),
     props: { type: 'hr' }
-  }
+  },
 ];
 
 const syntaxDecorator = new CompositeDecorator([
