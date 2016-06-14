@@ -4,8 +4,12 @@ import styles from '../utils/prism.css';
 import classNames from 'classnames';
 import regex from '../utils/regex';
 import emojiParser from 'emoji-parser';
+import marked from 'marked';
+import { Parser } from 'html-to-react';
 
 emojiParser.init('app/emoji-parser').update(true, null, null);
+
+const htmlToReactParser = Parser(React);
 
 const findWithRegex = (reg, contentBlock, callback) => {
   const text = contentBlock.getText();
@@ -35,30 +39,18 @@ const findEmoji = (reg, contentBlock, callback) => {
   }
 };
 
-const findWithTableRegex = (reg, contentBlock, callback) => {
-  const text = contentBlock.getText();
-  let matchArr;
-  while ((matchArr = reg.exec(text)) !== null) {
-    matchArr = matchArr[0].split('|');
-    matchArr = matchArr.filter(x => x);
-    let offset = 0;
-    matchArr.forEach((match) => {
-      if (text[offset] === '|') {
-        offset += 1;
-      }
-      let end = offset + match.length;
-      end = end < 0 ? 0 : end;
-      callback(offset, end);
-      offset = end;
-    });
-  }
-};
-
 const InlineComponent = props => (
   <span {...props} className={classNames(styles.token, styles[props.type])}>
     {props.children}
   </span>
 );
+
+const MarkedComponent = props => {
+  const text = props.children[0].props.text;
+  const html = marked(text);
+
+  return htmlToReactParser.parse(`<div>${html}</div>`);
+};
 
 const inlineDecorator = [
   {
@@ -160,32 +152,13 @@ const blockDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.block.list, contentBlock, callback),
-    component: props => {
-      const text = props.children[0].props.text;
-      let spaces = text.search(/\S/);
-      if (spaces % 2 !== 0) {
-        spaces += 1;
-      }
-      spaces = spaces / 2 % 4;
-      return (
-        <span
-          {...props}
-          className={classNames(
-            styles.token,
-            styles[props.type],
-            `matched-${spaces}`,
-          )}
-        >
-          {props.children}
-        </span>
-      );
-    },
+    component: MarkedComponent,
     props: { type: 'list' }
   },
   {
     strategy: (contentBlock, callback) =>
-      findWithTableRegex(regex.block.table, contentBlock, callback),
-    component: InlineComponent,
+      findWithBlockRegex(regex.block.table, contentBlock, callback),
+    component: MarkedComponent,
     props: { type: 'table' }
   },
   {

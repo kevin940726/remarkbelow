@@ -47,6 +47,9 @@ foo.replace(/b/, 'c');
 
 Bullet list:
 
+* apples
+* oranges
+* pears
   * apples
   * oranges
   * pears
@@ -56,24 +59,21 @@ Bullet list:
       * apples
       * oranges
       * pears
-        * apples
-        * oranges
-        * pears
 
 Numbered list:
 
+1. apples
   1. apples
+  2. oranges
+  3. pears
     1. apples
     2. oranges
     3. pears
       1. apples
       2. oranges
       3. pears
-        1. apples
-        2. oranges
-        3. pears
-  2. oranges
-  3. pears
+2. oranges
+3. pears
 
 | Tables        | Are           | Cool  |
 |---------------|:-------------:|-------|
