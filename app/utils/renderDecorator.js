@@ -114,7 +114,7 @@ const inlineDecorator = [
         />
       );
     },
-    props: { type: 'code' }
+    props: { type: 'emoji' }
   },
   {
     strategy: (contentBlock, callback) =>
