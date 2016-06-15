@@ -5,6 +5,14 @@ html, body {
   padding: 0;
 }
 
+:root {
+  --syntax-text-color: #607D8B;
+  --syntax-cursor-color: #009688;
+  --syntax-selection-color: #D6EDEA;
+  --syntax-background-color: #FAFAFA;
+  --syntax-comment-color: #B0BEC5;
+}
+
 .matched {
   color: red;
 }
@@ -33,14 +41,4 @@ body {
 .block-line {
   padding-left: 30px;
   position: relative;
-}
-.block-line::before {
-  counter-increment: section;
-  content: counter(section);
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
-  color: #AAA;
 }

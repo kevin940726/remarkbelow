@@ -1,6 +1,7 @@
 /* eslint max-len: 0 */
 import webpack from 'webpack';
 import baseConfig from './webpack.config.base';
+import cssnext from 'postcss-cssnext';
 
 const config = {
   ...baseConfig,
@@ -36,10 +37,15 @@ const config = {
         test: /^((?!\.global).)*\.css$/,
         loaders: [
           'style-loader',
-          'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
+          'css-loader?modules&sourceMap&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+          'postcss-loader'
         ]
       }
     ]
+  },
+
+  postcss() {
+    return [cssnext];
   },
 
   plugins: [

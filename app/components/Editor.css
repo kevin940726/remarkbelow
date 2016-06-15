@@ -1,7 +1,7 @@
 .editor {
   font: 13px/1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  color: #333;
+  color: var(--syntax-text-color);
   position: relative;
   font-size: 16px;
   line-height: 1.6;
@@ -15,4 +15,10 @@
   overflow: scroll;
   flex-shrink: 0;
   flex-grow: 1;
+  background-color: var(--syntax-background-color);
+}
+
+.viewEditor {
+  color: #333;
+  background-color: #FFF;
 }

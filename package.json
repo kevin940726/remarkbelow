@@ -112,6 +112,8 @@
     "marked": "^0.3.5",
     "parse5": "^2.1.5",
     "postcss": "^5.0.19",
+    "postcss-cssnext": "^2.6.0",
+    "postcss-loader": "^0.9.1",
     "prismjs": "^1.5.0",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",

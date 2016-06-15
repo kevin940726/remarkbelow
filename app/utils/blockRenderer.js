@@ -1,21 +1,16 @@
-// import React from 'react';
-import { block } from './regex';
-
+import React from 'react';
+import syntax from './syntax.css';
 
 const blockRenderer = contentBlock => {
   const text = contentBlock.getText();
 
-  if (block.blockquote.exec(text)) {
-    block.blockquote.lastIndex = 0;
-
-    // return {
-    //   component: props => (
-    //     <div>
-    //       {props.block.get('text')}
-    //     </div>
-    //   ),
-    // };
-  }
+  return {
+    component: props => (
+      <div className={syntax.block}>
+        {text}
+      </div>
+    ),
+  };
 };
 
 export default blockRenderer;

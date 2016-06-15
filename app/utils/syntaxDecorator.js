@@ -1,8 +1,8 @@
 import React from 'react';
 import { CompositeDecorator } from 'draft-js';
-import styles from '../utils/prism.css';
+import styles from './syntax.css';
 import classNames from 'classnames';
-import regex from '../utils/regex';
+import regex from './regex';
 
 const findWithRegex = (reg, contentBlock, callback) => {
   const text = contentBlock.getText();
@@ -74,11 +74,7 @@ const inlineDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.code, contentBlock, callback),
-    component: props => (
-      <code {...props} className="language-">
-        {props.children}
-      </code>
-    ),
+    component: InlineComponent,
     props: { type: 'code' }
   },
   {
@@ -173,7 +169,7 @@ const blockDecorator = [
     strategy: (contentBlock, callback) =>
       findWithBlockRegex(regex.block.codeBlock, contentBlock, callback),
     component: props => (
-      <div {...props} className="languages-">
+      <div {...props} className={styles[props.type]}>
         {props.children}
       </div>
     ),

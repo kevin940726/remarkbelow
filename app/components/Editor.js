@@ -1,6 +1,17 @@
 import React, { PropTypes } from 'react';
 import { Editor as DraftEditor } from 'draft-js';
 import styles from './Editor.css';
+import syntax from '../utils/syntax.css';
+import classNames from 'classnames';
+
+const blockStyleFn = (contentBlock, selection) => (
+  classNames(
+    syntax.block,
+    {
+      [syntax.currentLine]: selection.getStartKey() === contentBlock.getKey()
+    },
+  )
+);
 
 const Editor = ({
   refCallBack,
@@ -9,7 +20,7 @@ const Editor = ({
   onChange,
   onFocus,
   handleReturn,
-  onTab
+  onTab,
 }) => (
   <div
     className={styles.editor}
@@ -27,7 +38,7 @@ const Editor = ({
       onChange={onChange}
       handleReturn={() => handleReturn(editorState)}
       onTab={() => onTab(editorState)}
-      blockStyleFn={() => 'block-line'}
+      blockStyleFn={contentBlock => blockStyleFn(contentBlock, editorState.getSelection())}
       spellCheck
     />
   </div>
