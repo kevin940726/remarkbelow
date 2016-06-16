@@ -100,6 +100,19 @@ app.on('ready', () => {
         selector: 'selectAll:'
       }]
     }, {
+      label: 'File',
+      submenu: [{
+        label: 'Save',
+        click() {
+          mainWindow.webContents.send('save', 'save message');
+        }
+      }, {
+        label: 'Open',
+        click() {
+          mainWindow.webContents.send('open', 'open message');
+        }
+      }]
+    }, {
       label: 'View',
       submenu: (process.env.NODE_ENV === 'development') ? [{
         label: 'Reload',
