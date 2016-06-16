@@ -104,12 +104,16 @@ app.on('ready', () => {
       submenu: [{
         label: 'Save',
         click() {
-          mainWindow.webContents.send('save', 'save message');
+          const dialog = require('electron').dialog;
+          var path = dialog.showOpenDialog({ properties: [ 'openFile', 'openDirectory']});
+          mainWindow.webContents.send('save', path[0]);
         }
       }, {
         label: 'Open',
         click() {
-          mainWindow.webContents.send('open', 'open message');
+          const dialog = require('electron').dialog;
+          var path = dialog.showOpenDialog({ properties: [ 'openFile']});
+          mainWindow.webContents.send('open', path[0]);
         }
       }]
     }, {
