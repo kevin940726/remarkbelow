@@ -66,6 +66,6 @@
   }
 
   &.currentLine {
-    background-color: var(--syntax-selection-color);
+    /*background-color: var(--syntax-selection-color);*/
   }
 }

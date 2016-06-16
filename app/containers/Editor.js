@@ -31,7 +31,8 @@ const mapDispatchToProps = dispatch => ({
     if (text.match(block.codeBlockStart) ||
       text.match(block.list) ||
       text.match(block.table) ||
-      text.match(block.blockquote)
+      text.match(block.blockquote) ||
+      text.match(block.indentCodeBlock)
     ) {
       if (curText === '\n') {
         const newContentState = Modifier.splitBlock(
@@ -54,7 +55,7 @@ const mapDispatchToProps = dispatch => ({
     const insertedTabContent = Modifier.insertText(
       editorState.getCurrentContent(),
       editorState.getSelection(),
-      '\t'
+      '    '
     );
 
     const insertedTabState = EditorState.push(

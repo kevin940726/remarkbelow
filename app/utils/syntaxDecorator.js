@@ -175,6 +175,16 @@ const blockDecorator = [
     ),
     props: { type: 'codeBlock' }
   },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithBlockRegex(regex.block.indentCodeBlock, contentBlock, callback),
+    component: props => (
+      <div {...props} className={styles[props.type]}>
+        {props.children}
+      </div>
+    ),
+    props: { type: 'codeBlock' }
+  },
 ];
 
 const syntaxDecorator = new CompositeDecorator([

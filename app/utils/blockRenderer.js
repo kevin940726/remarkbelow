@@ -5,7 +5,7 @@ const blockRenderer = contentBlock => {
   const text = contentBlock.getText();
 
   return {
-    component: props => (
+    component: () => (
       <div className={syntax.block}>
         {text}
       </div>

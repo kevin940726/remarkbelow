@@ -24,6 +24,7 @@ $ npm start
 \`\`\`
 
     indentation
+    code block
 
 Two spaces at the end of a line leave a
 line break.
@@ -120,6 +121,11 @@ const parsedText = defaultText
     blockQuoteMap = blockQuoteMap.set(offset.toString(), match.replace(/\n$/, ''));
     const lastChar = match.charAt(match.length - 1);
     return `$$BLOCKQUITE__${offset}$$${lastChar === '\n' && lastChar}`;
+  })
+  .replace(regex.block.indentCodeBlock, (match, p1, p2, offset) => {
+    codeBlockMap = codeBlockMap.set(offset.toString(), match.replace(/\n+$/, ''));
+    const trailingNewLine = /(\n+)$/.exec(match);
+    return `$$CODEBLOCK__${offset}$$${trailingNewLine && trailingNewLine[1]}`;
   });
 
 const defaultContent = ContentState.createFromText(parsedText);

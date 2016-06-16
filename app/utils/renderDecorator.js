@@ -58,7 +58,7 @@ const findEmoji = (reg, contentBlock, callback) => {
 
 const MarkedComponent = props => {
   const text = props.children[0].props.text;
-  const html = marked(text, { renderer });
+  const html = marked(text, { renderer }).replace(/\n/g, '');
 
   return htmlToReactParser.parse(`<div>${html}</div>`);
 };
@@ -85,16 +85,6 @@ const inlineDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.code, contentBlock, callback),
-    component: props => (
-      <code {...props} className="language-">
-        {props.children}
-      </code>
-    ),
-    props: { type: 'code' }
-  },
-  {
-    strategy: (contentBlock, callback) =>
-      findWithRegex(regex.inline.indentation, contentBlock, callback),
     component: props => (
       <code {...props} className="language-">
         {props.children}
@@ -185,6 +175,29 @@ const blockDecorator = [
         <pre {...props}>
           <code className={styles[`language-${group[2]}`]}>
             {group[3]}
+          </code>
+        </pre>
+      );
+    },
+    props: { type: 'codeBlock' }
+  },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithBlockRegex(regex.block.indentCodeBlock, contentBlock, callback),
+    component: props => {
+      const text = props.children[0].props.text;
+      let match;
+      const code = [];
+
+      while (match = regex.block.indentCodeBlockCode.exec(text)) {
+        code.push(match[1]);
+      }
+      regex.block.indentCodeBlockCode.lastIndex = 0;
+
+      return (
+        <pre {...props}>
+          <code className={styles['language-']}>
+            {code.join('\n')}
           </code>
         </pre>
       );
