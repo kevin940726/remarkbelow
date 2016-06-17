@@ -1,8 +1,16 @@
-import { app, BrowserWindow, Menu, shell } from 'electron';
+import { app, BrowserWindow, Menu, shell, dialog, ipcMain } from 'electron';
+import fs from 'fs';
 
 let menu;
 let template;
 let mainWindow = null;
+
+
+ipcMain.on('save-content', (event, path, content) => {
+  fs.writeFile(path, content, err => {
+    if (err) throw new Error('存檔失敗');
+  });
+});
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -27,6 +35,12 @@ app.on('ready', () => {
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show();
     mainWindow.focus();
+
+    fs.readFile('./test.md', 'utf8', (err, content) => {
+      if (err) throw new Error('初始化錯誤');
+
+      mainWindow.webContents.send('open-content', content);
+    });
   });
 
   mainWindow.on('closed', () => {
@@ -71,6 +85,40 @@ app.on('ready', () => {
         }
       }]
     }, {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Open',
+          click() {
+            const path = dialog.showOpenDialog({
+              filters: [
+                { name: 'Markdown', extensions: ['md'] },
+                { name: 'All Files', extensions: ['*'] },
+              ],
+            });
+
+            fs.readFile(path[0], 'utf8', (err, data) => {
+              if (err) throw new Error('讀取失敗');
+
+              mainWindow.webContents.send('open-content', data);
+            });
+          }
+        },
+        {
+          label: 'Save',
+          click() {
+            const path = dialog.showSaveDialog({
+              filters: [
+                { name: 'Markdown', extensions: ['md'] },
+                { name: 'All Files', extensions: ['*'] },
+              ],
+            });
+
+            mainWindow.webContents.send('save', path);
+          }
+        }
+      ],
+    }, {
       label: 'Edit',
       submenu: [{
         label: 'Undo',
@@ -98,23 +146,6 @@ app.on('ready', () => {
         label: 'Select All',
         accelerator: 'Command+A',
         selector: 'selectAll:'
-      }]
-    }, {
-      label: 'File',
-      submenu: [{
-        label: 'Save',
-        click() {
-          const dialog = require('electron').dialog;
-          var path = dialog.showOpenDialog({ properties: [ 'openFile', 'openDirectory']});
-          mainWindow.webContents.send('save', path[0]);
-        }
-      }, {
-        label: 'Open',
-        click() {
-          const dialog = require('electron').dialog;
-          var path = dialog.showOpenDialog({ properties: [ 'openFile']});
-          mainWindow.webContents.send('open', path[0]);
-        }
       }]
     }, {
       label: 'View',

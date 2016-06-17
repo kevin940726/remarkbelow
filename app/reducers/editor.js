@@ -1,5 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { EditorState } from 'draft-js';
+import createStateFromText from '../utils/createEditorState';
 
 export default handleActions({
   SAVE_EDITOR_REF: (state, action) => ({
@@ -14,6 +15,10 @@ export default handleActions({
     ...state,
     viewEditorState: action.payload,
   }),
+  OPEN_FROM_TEXT: (state, action) => ({
+    ...state,
+    ...createStateFromText(action.payload),
+  })
 }, {
   editorState: EditorState.createEmpty(),
 });

@@ -1,4 +1,3 @@
-import { EditorState, ContentState, Modifier, SelectionState } from 'draft-js';
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
@@ -8,26 +7,19 @@ import routes from './routes';
 import configureStore from './store/configureStore';
 import initialState from './store/initialState';
 import './app.global.css';
+import { ipcRenderer } from 'electron';
+import { openFromText } from './actions/editor';
 
 const store = configureStore(initialState);
 const history = syncHistoryWithStore(hashHistory, store);
 
-require('electron').ipcRenderer.on('save', function(event, path) {
-    var content = store.getState().editor.editorState.getCurrentContent().getPlainText();
-    var fs = require('fs');
-    if(fs.lstatSync(path).isDirectory()){
-      path = path + "/save";
-    }
-    fs.writeFile(path, content, function(err) {
-      if(err) {
-        return console.log(err);
-      }
-      console.log("The file was saved!");
-    }); 
+ipcRenderer.on('save', (event, path) => {
+  const content = store.getState().editor.editorState.getCurrentContent().getPlainText();
+  ipcRenderer.sendSync('save-content', path, content);
 });
 
-require('electron').ipcRenderer.on('open', function(event, path) {
-        console.log(path); 
+ipcRenderer.on('open-content', (event, content) => {
+  store.dispatch(openFromText(content));
 });
 
 render(
