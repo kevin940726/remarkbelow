@@ -37,7 +37,10 @@ app.on('ready', () => {
     mainWindow.focus();
 
     fs.readFile('./test.md', 'utf8', (err, content) => {
-      if (err) throw new Error('初始化錯誤');
+      if (err) {
+        console.log('no test file, abort...'); // eslint-disable-line no-console
+        return;
+      }
 
       mainWindow.webContents.send('open-content', content);
     });
