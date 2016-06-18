@@ -69,3 +69,7 @@
     /*background-color: var(--syntax-selection-color);*/
   }
 }
+
+.viewBlock {
+  overflow: auto;
+}

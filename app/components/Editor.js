@@ -21,6 +21,7 @@ const Editor = ({
   onFocus,
   handleReturn,
   onTab,
+  onScroll,
 }) => (
   <div
     className={styles.editor}
@@ -31,6 +32,7 @@ const Editor = ({
         e.stopPropagation();
       }
     }}
+    onScroll={e => onScroll(e, editorRef)}
   >
     <DraftEditor
       ref={refCallBack}

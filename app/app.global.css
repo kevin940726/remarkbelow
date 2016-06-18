@@ -4,6 +4,9 @@ html, body {
   margin: 0;
   padding: 0;
 }
+body {
+  counter-reset: section;
+}
 
 :root {
   --syntax-text-color: #607D8B;
@@ -13,32 +16,52 @@ html, body {
   --syntax-comment-color: #B0BEC5;
 }
 
-.matched {
-  color: red;
-}
-.matched-0 {
-  color: red;
-}
-.matched-1 {
-  color: red;
-}
-.matched-2 {
-  color: grey;
-}
-.matched-3 {
-  color: green;
-}
-.bold {
-  font-weight: bold;
-}
-.italic {
-  font-style: italic;
+.Resizer {
+  background: #000;
+  opacity: .2;
+  z-index: 1;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
 }
 
-body {
-  counter-reset: section;
+.Resizer:hover {
+  -webkit-transition: all 2s ease;
+  transition: all 2s ease;
 }
-.block-line {
-  padding-left: 30px;
-  position: relative;
+
+.Resizer.horizontal {
+  height: 11px;
+  margin: -5px 0;
+  border-top: 5px solid rgba(255, 255, 255, 0);
+  border-bottom: 5px solid rgba(255, 255, 255, 0);
+  cursor: row-resize;
+  width: 100%;
+}
+
+.Resizer.horizontal:hover {
+  border-top: 5px solid rgba(0, 0, 0, 0.5);
+  border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+}
+
+.Resizer.vertical {
+  width: 1px;
+  margin: 0 -5px;
+  border-left: 5px solid rgba(255, 255, 255, 0);
+  border-right: 5px solid rgba(255, 255, 255, 0);
+  cursor: col-resize;
+}
+
+.Resizer.vertical:hover {
+  border-left: 5px solid rgba(0, 0, 0, 0.5);
+  border-right: 5px solid rgba(0, 0, 0, 0.5);
+}
+Resizer.disabled {
+  cursor: not-allowed;
+}
+Resizer.disabled:hover {
+  border-color: transparent;
 }

@@ -1,9 +1,11 @@
 import { connect } from 'react-redux';
 import Editor from '../components/Editor';
-import { saveEditorRef, editorOnChange, viewEditorOnChange } from '../actions/editor';
+import { saveEditorRef, editorOnChange, viewEditorOnChange, scrollTo } from '../actions/editor';
 import { RichUtils, EditorState, Modifier } from 'draft-js';
 import { block } from '../utils/regex';
 import renderDecorator from '../utils/renderDecorator';
+import { findDOMNode } from 'react-dom';
+import syntax from '../utils/syntax.css';
 
 const mapStateToProps = state => ({
   editorRef: state.editor.editorRef,
@@ -69,7 +71,17 @@ const mapDispatchToProps = dispatch => ({
         EditorState.createWithContent(insertedTabState.getCurrentContent(), renderDecorator)
       ));
     });
-  }
+  },
+  onScroll: (event, editorRef) => {
+    const { scrollTop } = event.target;
+    const node = findDOMNode(editorRef);
+    const blocks = [].slice.call(node.querySelectorAll(`.${syntax.block}`));
+    const topBlock = blocks.find(b => b.offsetTop - 15 >= scrollTop);
+    const topBlockKey = topBlock.dataset.offsetKey.substr(0, 5);
+    console.log(topBlockKey);
+
+    dispatch(scrollTo(topBlockKey));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);

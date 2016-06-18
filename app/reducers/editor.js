@@ -18,7 +18,11 @@ export default handleActions({
   OPEN_FROM_TEXT: (state, action) => ({
     ...state,
     ...createStateFromText(action.payload),
-  })
+  }),
+  SCROLL_TO: (state, action) => ({
+    ...state,
+    scrollTopKey: action.payload,
+  }),
 }, {
   editorState: EditorState.createEmpty(),
 });
