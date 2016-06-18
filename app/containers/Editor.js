@@ -78,7 +78,6 @@ const mapDispatchToProps = dispatch => ({
     const blocks = [].slice.call(node.querySelectorAll(`.${syntax.block}`));
     const topBlock = blocks.find(b => b.offsetTop - 15 >= scrollTop);
     const topBlockKey = topBlock.dataset.offsetKey.substr(0, 5);
-    console.log(topBlockKey);
 
     dispatch(scrollTo(topBlockKey));
   },
