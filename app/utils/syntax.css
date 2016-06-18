@@ -71,5 +71,5 @@
 }
 
 .viewBlock {
-  overflow: auto;
+  overflow: visible;
 }

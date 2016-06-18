@@ -101,6 +101,8 @@ app.on('ready', () => {
               ],
             });
 
+            if (!path || !path[0]) return;
+
             fs.readFile(path[0], 'utf8', (err, data) => {
               if (err) throw new Error('讀取失敗');
 

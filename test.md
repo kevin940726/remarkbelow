@@ -11,6 +11,8 @@ This is a :telephone:
 Paragraphs are separated
 by a blank line.
 
+Latex support: $\int_0^\infty e^{-x^2} dx=\frac{\sqrt{\pi}}{2}$
+
 ```bash
 $ npm install
 $ npm start

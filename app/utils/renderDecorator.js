@@ -6,6 +6,7 @@ import regex from '../utils/regex';
 import emojiParser from 'emoji-parser';
 import marked from 'marked';
 import { Parser } from 'html-to-react';
+import katex from 'katex';
 
 emojiParser.init('app/emoji-parser').update(true, null, null);
 
@@ -124,6 +125,16 @@ const inlineDecorator = [
     },
     props: { type: 'link' }
   },
+  {
+    strategy: (contentBlock, callback) =>
+      findWithRegex(regex.inline.latex, contentBlock, callback),
+    component: props => {
+      const text = props.children[0].props.text;
+      const html = katex.renderToString(text.substring(1, text.length - 1));
+      return htmlToReactParser.parse(html);
+    },
+    props: { type: 'latex-inline' }
+  }
 ];
 
 const blockDecorator = [

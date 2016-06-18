@@ -10,6 +10,7 @@ const inline = {
   href: /\s*<?([\s\S]*?)>?(?:\s+['"]([\s\S]*?)['"])?\s*/g,
   url: /(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g,
   img: /<img[^>]+src="([^">]+)" title="([^">]+)" alt="([^">]+)" \/>/g,
+  latex: /\$(?=\S)([\s\S]*?\S)\$/g,
 };
 
 inline.link = new RegExp(
