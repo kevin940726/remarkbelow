@@ -46,6 +46,27 @@ const findWithBlockRegex = (reg, contentBlock, callback) => {
   }
 };
 
+const InlineComponent = props => {
+  const text = props.children[0].props.text;
+  const group = regex.inline[props.type].exec(text);
+  regex.inline[props.type].lastIndex = 0;
+
+  if (props.type === 'strong') {
+    return (<strong>{group[2]}</strong>);
+  }
+  else if (props.type === 'italic') {
+    return (<em>{group[2]}</em>);
+  }
+  else if (props.type === 'strike') {
+    return (<s>{group[2]}</s>);
+  }
+  else if (props.type === 'code') {
+    return (<code>{group[2]}></code>);
+  }
+
+  return (<span>{text}</span>);
+};
+
 const findEmoji = (reg, contentBlock, callback) => {
   const text = contentBlock.getText();
   const textWithEmoji = emojiParser.parse(text, '');
@@ -68,29 +89,25 @@ const inlineDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.strong, contentBlock, callback),
-    component: props => (<strong>{props.children}</strong>),
-    props: { type: 'bold' }
+    component: InlineComponent,
+    props: { type: 'strong' }
   },
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.italic, contentBlock, callback),
-    component: props => (<em>{props.children}</em>),
+    component: InlineComponent,
     props: { type: 'italic' }
   },
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.strike, contentBlock, callback),
-    component: props => (<s>{props.children}</s>),
+    component: InlineComponent,
     props: { type: 'strike' }
   },
   {
     strategy: (contentBlock, callback) =>
       findWithRegex(regex.inline.code, contentBlock, callback),
-    component: props => (
-      <code {...props} className="language-">
-        {props.children}
-      </code>
-    ),
+    component: InlineComponent,
     props: { type: 'code' }
   },
   {
@@ -134,7 +151,7 @@ const inlineDecorator = [
       return htmlToReactParser.parse(html);
     },
     props: { type: 'latex-inline' }
-  }
+  },
 ];
 
 const blockDecorator = [
@@ -155,11 +172,16 @@ const blockDecorator = [
   {
     strategy: (contentBlock, callback) =>
       findWithBlockRegex(regex.block.blockquote, contentBlock, callback),
-    component: props => (
-      <blockquote>
-        {props.children}
-      </blockquote>
-    ),
+    component: props => {
+      const text = props.children[0].props.text;
+      const blockquote = text.replace(/^>[\t ]*/gm, '');
+
+      return (
+        <blockquote>
+          {blockquote}
+        </blockquote>
+      );
+    },
     props: { type: 'blockquote' }
   },
   {
