@@ -61,7 +61,7 @@ const InlineComponent = props => {
     return (<s>{group[2]}</s>);
   }
   else if (props.type === 'code') {
-    return (<code>{group[2]}></code>);
+    return (<code>{group[2]}</code>);
   }
 
   return (<span>{text}</span>);

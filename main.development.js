@@ -27,8 +27,10 @@ app.on('ready', () => {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
-    height: 728,
+    height: 768,
     titleBarStyle: 'hidden-inset',
+    movable: true,
+    title: 'Remarkbelow',
   });
 
   mainWindow.loadURL(`file://${__dirname}/app/app.html`);
