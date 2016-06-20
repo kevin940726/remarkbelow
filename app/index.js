@@ -15,7 +15,7 @@ const history = syncHistoryWithStore(hashHistory, store);
 
 ipcRenderer.on('save', (event, path) => {
   const content = store.getState().editor.editorState.getCurrentContent().getPlainText();
-  ipcRenderer.sendSync('save-content', path, content);
+  ipcRenderer.send('save-content', path, content);
 });
 
 ipcRenderer.on('open-content', (event, content) => {
