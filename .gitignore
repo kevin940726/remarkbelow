@@ -37,3 +37,6 @@ main.js.map
 
 # emoji-parser
 app/emoji-parser/\!index.list
+
+# report
+report.*
